@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -123,6 +124,8 @@ public class PhrasesActivity extends AppCompatActivity {
                     // Setup a listener on the media player, so that we can stop and release the
                     // media player once the sound has finished playing.
                     mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                } else if (result == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
+                    Toast.makeText(PhrasesActivity.this, "Couldn't get audio focus, wait and try again", Toast.LENGTH_SHORT).show();
                 }
             }
         });

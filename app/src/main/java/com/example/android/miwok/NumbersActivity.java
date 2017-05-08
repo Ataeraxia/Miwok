@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class NumbersActivity extends AppCompatActivity {
      * This listener gets triggered when the {@link MediaPlayer} has completed
      * playing the audio file.
      */
-    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+    MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             // Now that the sound file has finished playing, release the media player resources.
@@ -44,7 +45,9 @@ public class NumbersActivity extends AppCompatActivity {
         }
     };
 
-    private AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+    // Bug: IllegalStateException: System services not available to Activities before onCreate()
+    //      Should be fixed for NumbersActivity, but other activities will crash
+    private AudioManager audioManager;
 
     private AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
@@ -93,6 +96,8 @@ public class NumbersActivity extends AppCompatActivity {
         // {@link ListView} will display list items for each {@link Word} in the list.
         listView.setAdapter(adapter);
 
+        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
         // Set a click listener to play the audio when the list item is clicked on
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -120,6 +125,8 @@ public class NumbersActivity extends AppCompatActivity {
                     // Setup a listener on the media player, so that we can stop and release the
                     // media player once the sound has finished playing.
                     mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                } else if (result == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
+                    Toast.makeText(NumbersActivity.this, "Couldn't get audio focus, wait and try again", Toast.LENGTH_SHORT).show();
                 }
             }
         });
