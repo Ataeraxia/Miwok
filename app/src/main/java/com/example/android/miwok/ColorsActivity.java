@@ -45,7 +45,7 @@ public class ColorsActivity extends AppCompatActivity {
         }
     };
 
-    private AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+    private AudioManager audioManager;
 
     private AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
@@ -93,6 +93,8 @@ public class ColorsActivity extends AppCompatActivity {
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} in the list.
         listView.setAdapter(adapter);
+
+        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         // Set a click listener to play the audio when the list item is clicked on
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
