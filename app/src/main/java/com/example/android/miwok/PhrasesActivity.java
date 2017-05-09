@@ -53,10 +53,10 @@ public class PhrasesActivity extends AppCompatActivity {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 mMediaPlayer.stop();
                 releaseMediaPlayer();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+                       focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                 mMediaPlayer.pause();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                mMediaPlayer.pause();
+                mMediaPlayer.seekTo(0);
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 mMediaPlayer.start();
             }
@@ -138,6 +138,7 @@ public class PhrasesActivity extends AppCompatActivity {
         super.onStop();
         // When the activity is stopped, release the media player resources because we won't
         // be playing any more sounds.
+        audioManager.abandonAudioFocus(afChangeListener);
         releaseMediaPlayer();
     }
 

@@ -55,10 +55,10 @@ public class NumbersActivity extends AppCompatActivity {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 mMediaPlayer.stop();
                 releaseMediaPlayer();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+                       focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                 mMediaPlayer.pause();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                mMediaPlayer.pause();
+                mMediaPlayer.seekTo(0);
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 mMediaPlayer.start();
             }
@@ -125,6 +125,7 @@ public class NumbersActivity extends AppCompatActivity {
                     // Setup a listener on the media player, so that we can stop and release the
                     // media player once the sound has finished playing.
                     mMediaPlayer.setOnCompletionListener(mCompletionListener);
+
                 } else if (result == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
                     Toast.makeText(NumbersActivity.this, "Couldn't get audio focus, wait and try again", Toast.LENGTH_SHORT).show();
                 }
@@ -137,6 +138,7 @@ public class NumbersActivity extends AppCompatActivity {
         super.onStop();
         // When the activity is stopped, release the media player resources because we won't
         // be playing any more sounds.
+        audioManager.abandonAudioFocus(afChangeListener);
         releaseMediaPlayer();
     }
 
