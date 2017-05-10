@@ -105,7 +105,6 @@ public class PhrasesActivity extends AppCompatActivity {
                 int result = audioManager.requestAudioFocus(afChangeListener,
                         AudioManager.STREAM_MUSIC,
                         AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 
 
